@@ -1,7 +1,6 @@
-from random import randint
-from random import uniform
-from typing import Dict
-from typing import List
+import pickle
+from random import randint, uniform
+from typing import Dict, List, cast
 
 
 class State:
@@ -53,22 +52,28 @@ class Transitions:
 
 
 class MarkovChain:
+    @classmethod
+    def fromfile(cls, file_name) -> 'MarkovChain':
+        with open(file_name, 'rb') as model_file:
+            model = pickle.load(model_file)
+        return cast(MarkovChain, model)
+
     def __init__(self):
         self.__states: Dict[str, Transitions] = dict()
         self.__keys: List[str] = []
 
     def fit(self, tokens: List[str]) -> None:
-        states = dict.fromkeys(tokens, Transitions())
+        states = {token: Transitions() for token in tokens}
         size = len(tokens)
         for i in range(size):
             token = tokens[i]
             next_token = tokens[(i + 1) % size]
             states[token].add_state(next_token)
         self.__states = states
-        self.__keys = states.keys()
+        self.__keys = list(states.keys())
 
     def __random_seed__(self) -> str:
-        index = randint(0, len(self.__keys))
+        index = randint(0, len(self.__keys) - 1)
         return self.__keys[index]
 
     def generate(self, length: int = 0, seed: str = None) -> str:
@@ -86,3 +91,7 @@ class MarkovChain:
             current_word = transitions.next(threshold)
             result.append(current_word)
         return ' '.join(result)
+
+    def serialize(self, filename):
+        with open(filename, 'wb') as model_file:
+            pickle.dump(self, model_file)

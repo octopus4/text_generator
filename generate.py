@@ -1,6 +1,5 @@
 import argparse
-import models
-import pickle
+from models import MarkovChain
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--model", default=None, type=str, help="Directory path to the trained model")
@@ -12,8 +11,6 @@ model_dir = args.model
 seed = args.seed
 length = args.length
 
-with open(model_dir, 'rb') as model_file:
-    model_pickle = pickle.load(model_file)
-    model = models.MarkovChain()
+model = MarkovChain.fromfile(model_dir)
 result = model.generate(length, seed)
 print(result)

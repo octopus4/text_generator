@@ -1,6 +1,5 @@
 import argparse
 import models
-import pickle
 import preprocessing
 
 
@@ -19,26 +18,21 @@ def read_data(input_directory: str) -> str:
         return ' '.join(lines)
 
 
-def save_model(model_obj: models.MarkovChain, model_directory: str):
-    with open(model_directory, 'wb') as model_file:
-        pickle.dump(model_obj, model_file)
-
-
 parser = argparse.ArgumentParser()
 parser.add_argument("--input-dir", default=None, type=str, help="Directory path to training data file")
 parser.add_argument("--model", default=None, type=str, help="Directory path to save trained model")
-parser.add_argument("--exception-terms", default="", type=str,
-                    help="String with symbols excepted from the ignore list")
+parser.add_argument("--ignore", default="-", type=str,
+                    help="String with symbols that are not taken into account while parsing the input")
 
 args = parser.parse_args()
 validate(args)
 input_dir = args.input_dir
 model_dir = args.model
-exception_terms = args.exception_terms
+ignore_list = args.ignore
 
 raw_data = read_data(input_dir)
-settings = preprocessing.Settings(exceptions=exception_terms)
+settings = preprocessing.Settings(ignore_list)
 training_data = preprocessing.tokenize(raw_data, settings)
 model = models.MarkovChain()
 model.fit(training_data)
-save_model(model, model_dir)
+model.serialize(model_dir)
