@@ -1,4 +1,5 @@
 import argparse
+import preprocessing
 from models import MarkovChain
 
 parser = argparse.ArgumentParser()
@@ -13,4 +14,4 @@ length = args.length
 
 model = MarkovChain.fromfile(model_dir)
 result = model.generate(length, seed)
-print(result)
+print(preprocessing.format_result(result))
