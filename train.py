@@ -5,17 +5,17 @@ import utils
 from pathlib import Path
 
 
-def validate_input_dir(arg_value: str):
-    is_none_error_msg = "You have to specify path to the data file in the arguments list"
-    does_not_exist_error_msg = "You have to specify a valid path to the data file"
+def validate_input_dir(arg_value: str) -> None:
+    is_none_error_msg = "You have to specify a path to the data file in the arguments list"
+    not_found_error_msg = "You have to specify a valid path to the data file"
     if arg_value is None:
         raise ValueError(is_none_error_msg)
     if not Path(arg_value).is_file():
-        raise ValueError(does_not_exist_error_msg)
+        raise ValueError(not_found_error_msg)
 
 
 def validate_model_path(arg_value: str):
-    error_msg = "You have to specify path to the result model file in the arguments list"
+    error_msg = "You have to specify a path to the result model file in the arguments list"
     if arg_value is None:
         raise ValueError(error_msg)
 
