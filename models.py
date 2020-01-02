@@ -80,7 +80,7 @@ class MarkovChain:
         if seed is None:
             seed = self.__random_seed__()
         if seed not in self.__states.keys():
-            raise KeyError
+            raise KeyError("Provided seed must be an existing key in the model dictionary")
         if length < 0:
             raise ValueError("Size cannot be less than zero")
         current_word = seed
