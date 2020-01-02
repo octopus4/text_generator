@@ -20,7 +20,7 @@ parser.add_argument("--length", default=None, type=int, help="Maximal length of 
 
 validators = {"model": validate_model_path}
 args = parser.parse_args()
-utils.validate(vars(args))
+utils.validate(vars(args), validators)
 model_dir = args.model
 seed = args.seed
 length = args.length
